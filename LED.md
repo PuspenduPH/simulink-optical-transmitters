@@ -124,7 +124,7 @@ Because the unipolar pulse acts as a sudden step input and the LED's response ti
 
 ## 5. Simulation Results
 
-> No dedicated scope plot file exists yet — run `led_res.slx` and export the Scope to `LED/ARTIFACTS/Plots/` to populate this section.
+![LED scope output](LED/ARTIFACTS/Plots/scope_led.png)
 
 ### Reading the Scope — What the Physics Tells Us
 
@@ -134,6 +134,6 @@ Because the unipolar pulse acts as a sudden step input and the LED's response ti
 
 **Bandwidth ceiling.** The 3 dB modulation bandwidth of this LED is $f_{3dB} = 1/(2\pi\tau_r)$. For nanosecond-scale $\tau_r$ values, this limits the LED to tens or hundreds of MHz — which is why LEDs are reserved for short-reach, moderate-bandwidth links (e.g., local-area fiber networks), while LASER diodes are used for high-speed long-haul communications.
 
-**mW display scaling.** The ×1000 Gain block after the subsystem output converts the simulation's native Watt-scale output into milliwatts, matching the scale of reference plots in the literature and making it easier to read practical optical power levels.
+
 
 
