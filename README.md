@@ -248,6 +248,10 @@ The 1st-order low-pass response produces the characteristic smooth exponential r
 |:---:|:---:|
 | ![LED main model](LED/ARTIFACTS/Model%20Snapshots/main%20model.png) | ![LED subsystem](LED/ARTIFACTS/Model%20Snapshots/subsystem.png) |
 
+#### Scope Output
+
+![LED scope output](LED/ARTIFACTS/Plots/scope_led.png)
+
 ---
 
 ### FP Laser — Relaxation Oscillations at 500 MHz
