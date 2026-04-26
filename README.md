@@ -21,9 +21,10 @@
   - [📊 Simulation Results](#-simulation-results)
     - [LED — Optical Power Transient at 25 MHz](#led--optical-power-transient-at-25-mhz)
       - [Model Canvas](#model-canvas)
+      - [Scope Output](#scope-output)
     - [FP Laser — Relaxation Oscillations at 500 MHz](#fp-laser--relaxation-oscillations-at-500-mhz)
       - [Model Canvas](#model-canvas-1)
-      - [Scope Output](#scope-output)
+      - [Scope Output](#scope-output-1)
     - [QW Laser — Turn-On Delay vs. Gain Clamping](#qw-laser--turn-on-delay-vs-gain-clamping)
       - [Model Canvas](#model-canvas-2)
       - [Scope Output — Test Cases](#scope-output--test-cases)
@@ -57,7 +58,7 @@ The models directly implement the governing equations (transfer functions and ra
 | Property | Details |
 |:---|:---|
 | **Model file** | `LED/led_res.slx` |
-| **Init script** | `LED/LEDcbV2.m` |
+| **Init script** | `LED/led_mask_init.m` |
 | **Documentation** | `LED.md` |
 | **Approach** | Small-signal frequency-domain (1st-order low-pass) |
 
@@ -77,7 +78,7 @@ The LED response is governed by the carrier recombination lifetime $\tau_r$ and 
 |:---|:---|
 | **Model file** | `FP Laser/laser_res.slx` |
 | **Init script** | `FP Laser/laser_tf_init.m` |
-| **Documentation** | `LASER.md` |
+| **Documentation** | `FP_LASER.md` |
 | **Approach** | Small-signal frequency-domain (2nd-order resonant) |
 
 **Transfer Function:**
@@ -136,7 +137,7 @@ Simulink Optical Simulations Project/
 │
 ├── LED/
 │   ├── led_res.slx                    # Simulink model — LED diode
-│   ├── LEDcbV2.m                      # Mask initialization script
+│   ├── led_mask_init.m                      # Mask initialization script
 │   └── ARTIFACTS/
 │       ├── Model Snapshots/
 │       │   ├── main model.png
@@ -155,7 +156,7 @@ Simulink Optical Simulations Project/
 │           ├── test_case1.png         # Unbiased pulse — turn-on delay
 │           └── test_case2.png         # Pre-biased — gain clamping
 │
-├── LASER.md                           # FP Laser — theory, model, and solver guide
+├── FP_LASER.md                           # FP Laser — theory, model, and solver guide
 ├── LED.md                             # LED — theory, model, and solver guide
 ├── QW_LASER.md   # QW Laser — full documentation
 ├── Simulink_Subsystem_User_Guide.md   # End-to-end guide for building masked subsystems
@@ -320,7 +321,7 @@ $$\eta_{ext} = \left[1 - \left(\frac{n_s - n_a}{n_s + n_a}\right)^2\right]\left[
 | File | Contents |
 |:---|:---|
 | [`LED.md`](LED.md) | LED theory, transfer function derivation, mask parameters, solver settings |
-| [`LASER.md`](LASER.md) | FP Laser theory, small-signal model, initialization code walkthrough |
+| [`FP_LASER.md`](FP_LASER.md) | FP Laser theory, small-signal model, initialization code walkthrough |
 | [`QW_LASER.md`](QW_LASER.md) | QW Laser rate equations, test harness design, gain-clamping analysis |
 | [`Simulink_Subsystem_User_Guide.md`](Simulink_Subsystem_User_Guide.md) | End-to-end step-by-step guide for building masked subsystems from scratch |
 

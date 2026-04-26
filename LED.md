@@ -45,7 +45,7 @@ The subsystem is masked, prompting the user for the physical parameters. Because
 This script retrieves the mask parameters, evaluates the complex fractional and trigonometric expressions for efficiency, and defines the `HT_0` variable for the block diagram.
 
 ```matlab
-classdef led_tf_init
+classdef led_mask_init
     methods(Static)
         function MaskInitialization(maskInitContext)
             % Access the mask workspace object
