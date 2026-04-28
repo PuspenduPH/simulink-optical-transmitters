@@ -25,12 +25,15 @@ Substituting $s = j2\pi f$, this translates perfectly into a continuous-time 1st
 $$H_T^*(s) = \frac{1}{\tau_r s + 1}$$
 
 ### 1.3 Physical Parameters
-| Parameter | Symbol | Description | Unit |
-| :--- | :--- | :--- | :--- |
-| **Emission wavelength** | $\lambda$ | Operating wavelength of the LED | m |
-| **Recombination times** | $\tau_{nr}$, $\tau_r$ | Non-radiative and radiative carrier lifetimes | s |
-| **Injection efficiency** | $\eta_{inj}$ | Current-injection efficiency | Dimensionless |
-| **Refractive indices** | $n_s$, $n_a$ | Semiconductor and surrounding media index | Dimensionless |
+### 1.3 Physical Parameters
+| Parameter | Symbol | Description | Unit | Value |
+| :--- | :--- | :--- | :--- | :--- |
+| **Emission wavelength** | $\lambda$ | Operating wavelength of the LED | m | $850 \times 10^{-9}$ |
+| **Radiative lifetime** | $\tau_r$ | Radiative carrier lifetime | s | $5.0 \times 10^{-9}$ |
+| **Non-radiative lifetime** | $\tau_{nr}$ | Non-radiative carrier lifetime | s | $50.0 \times 10^{-9}$ |
+| **Injection efficiency** | $\eta_{inj}$ | Current-injection efficiency | - | $0.90$ |
+| **Semiconductor index** | $n_s$ | Refractive index of semiconductor | - | $3.60$ |
+| **Media index** | $n_a$ | Refractive index of surrounding media | - | $1.00$ |
 
 ---
 
@@ -96,7 +99,7 @@ With the math handled by the initialization script, the LED subsystem consists o
 
 | Top-Level Model | Subsystem Internals |
 |:---:|:---:|
-| ![LED main model](LED/ARTIFACTS/Model%20Snapshots/main%20model.png) | ![LED subsystem](LED/ARTIFACTS/Model%20Snapshots/subsystem.png) |
+| ![LED main model](LED/ARTIFACTS/Model%20Snapshots/main_model.png) | ![LED subsystem](LED/ARTIFACTS/Model%20Snapshots/subsystem.png) |
 
 **Top-level model:** The canvas shows a unipolar Pulse Generator (0–50 mA, 25 MHz) driving the masked LED subsystem directly. The output optical power (in Watts) is scaled by a ×1000 Gain block to display in milliwatts on the Scope.
 

@@ -112,8 +112,9 @@ A **multi-port test harness** (Multiport Switch) allows seamless switching betwe
 
 | Test Case | Drive Signal | Observed Physics |
 |:---|:---|:---|
-| **Case 1** | 0 mA → 10 mA (unbiased) | Turn-on delay (~0.4 ns) + severe relaxation oscillations |
-| **Case 2** | 9.5 mA bias + 1.0 mA pulse | Gain clamping — zero turn-on delay, instantaneous $P_f$ response |
+| **Case 1** | 0 mA → 10 mA (unbiased, Pulse Generator) | Turn-on delay (~0.4 ns) + severe relaxation oscillations |
+| **Case 2A** | 10.5 mA (Pre-biased, Pulse Generator Hot-Start) | Gain clamping — zero turn-on delay, instantaneous response |
+| **Case 2B** | 9.5 mA bias + 1.0 mA pulse (Signal Generator Cold-Start) | Realistic transient timeline with 9.5 mA steady-state biasing + zero turn-on delay during modulation |
 
 The solver runs at **fixed-step ode4 (Runge-Kutta 4th order)** with a 100 fs step size to maintain numerical stability through the stiff photon-density bursts.
 
@@ -137,28 +138,31 @@ Simulink Optical Simulations Project/
 │
 ├── LED/
 │   ├── led_res.slx                    # Simulink model — LED diode
-│   ├── led_mask_init.m                      # Mask initialization script
+│   ├── led_mask_init.m                # Mask initialization script
 │   └── ARTIFACTS/
 │       ├── Model Snapshots/
-│       │   ├── main model.png
+│       │   ├── main_model.png
 │       │   └── subsystem.png
 │       └── Plots/
-│           └── (scope plots)
+│           └── scope_led.png
 │
 ├── QW Laser/
 │   ├── qw_laser_response.slx          # Simulink model — QW Laser (rate equations)
 │   ├── rate_equations_init.m          # Mask initialization script
 │   └── ARTIFACTS/
 │       ├── Model Snapshots/
-│       │   ├── main model.png
+│       │   ├── main_model_pg.png      # Top-level canvas (Pulse Generator)
+│       │   ├── main_model_sg.png      # Top-level canvas (Signal Generator)
 │       │   └── sub_rate_eq.png        # Rate equations subsystem internals
 │       └── Plots/
 │           ├── test_case1.png         # Unbiased pulse — turn-on delay
-│           └── test_case2.png         # Pre-biased — gain clamping
+│           ├── test_case2_pg.png      # Pre-biased — ideal hot-start
+│           └── test_case2_sg.png      # Pre-biased — realistic cold-start
 │
 ├── FP_LASER.md                           # FP Laser — theory, model, and solver guide
 ├── LED.md                             # LED — theory, model, and solver guide
-├── QW_LASER.md   # QW Laser — full documentation
+├── QW_LASER.md                        # QW Laser — standard documentation
+├── QW_LASER_Simulation_Documentation_Extended.md   # QW Laser — extended documentation with transients
 ├── Simulink_Subsystem_User_Guide.md   # End-to-end guide for building masked subsystems
 └── Simulink toolbox for simulation and analysis of optical fiber links.pdf  # Base reference paper
 ```
@@ -247,7 +251,7 @@ The 1st-order low-pass response produces the characteristic smooth exponential r
 
 | Top-Level Model | Subsystem Internals |
 |:---:|:---:|
-| ![LED main model](LED/ARTIFACTS/Model%20Snapshots/main%20model.png) | ![LED subsystem](LED/ARTIFACTS/Model%20Snapshots/subsystem.png) |
+| ![LED main model](LED/ARTIFACTS/Model%20Snapshots/main_model.png) | ![LED subsystem](LED/ARTIFACTS/Model%20Snapshots/subsystem.png) |
 
 #### Scope Output
 
@@ -275,24 +279,24 @@ The 2nd-order resonant transfer function reproduces the characteristic ringing t
 
 ### QW Laser — Turn-On Delay vs. Gain Clamping
 
-| | Test Case 1 (Unbiased) | Test Case 2 (Pre-biased) |
-|:---|:---|:---|
-| **Drive** | 0 → 10 mA step | 9.5 mA + 1 mA pulse |
-| **Turn-on delay** | ~0.4 ns | None |
-| **$N(t)$ behavior** | Rises, overshoots $N_0$, rings | Clamped flat at threshold |
-| **$P_f(t)$ behavior** | Delayed burst + oscillations | Clean, instantaneous modulation |
+| | Test Case 1 (Unbiased) | Case 2A: Ideal Hot-Start | Case 2B: Realistic Cold-Start |
+|:---|:---|:---|:---|
+| **Drive** | 0 → 10 mA step | 10.5 mA Pulse clamp | 9.5 mA bias + 1.0 mA pulse |
+| **Turn-on delay** | ~0.4 ns | None | ~12ns initial, 0ns during mod |
+| **$N(t)$ behavior** | Rises, overshoots $N_0$, rings | Instantly clamped at threshold | Rises, crosses $N_0$, steady |
+| **$P_f(t)$ behavior** | Delayed burst + oscillations | Instant modulation | Initial ringing, steady state mod |
 
 #### Model Canvas
 
-| Top-Level Model | Rate Equations Subsystem |
-|:---:|:---:|
-| ![QW Laser main model](QW%20Laser/ARTIFACTS/Model%20Snapshots/main%20model.png) | ![QW Laser rate eq subsystem](QW%20Laser/ARTIFACTS/Model%20Snapshots/sub_rate_eq.png) |
+| Top-Level Model (Pulse Generator) | Top-Level Model (Signal Generator) | Rate Equations Subsystem |
+|:---:|:---:|:---:|
+| ![QW Laser PG](QW%20Laser/ARTIFACTS/Model%20Snapshots/main_model_pg.png) | ![QW Laser SG](QW%20Laser/ARTIFACTS/Model%20Snapshots/main_model_sg.png) | ![QW Laser Subsystem](QW%20Laser/ARTIFACTS/Model%20Snapshots/sub_rate_eq.png) |
 
 #### Scope Output — Test Cases
 
-| Case 1: Unbiased (Turn-On Delay + Ringing) | Case 2: Pre-biased (Gain Clamping) |
-|:---:|:---:|
-| ![QW Laser Case 1](QW%20Laser/ARTIFACTS/Plots/test_case1.png) | ![QW Laser Case 2](QW%20Laser/ARTIFACTS/Plots/test_case2.png) |
+| Case 1: Unbiased — Delay + Ringing | Case 2A: Pre-biased — Ideal Hot-Start | Case 2B: Pre-biased — Realistic Cold-Start |
+|:---:|:---:|:---:|
+| ![Unbiased Case](QW%20Laser/ARTIFACTS/Plots/test_case1.png) | ![QW Laser test case 2](QW%20Laser/ARTIFACTS/Plots/test_case2_pg.png) | ![QW Laser signal generator scope](QW%20Laser/ARTIFACTS/Plots/test_case2_sg.png) |
 
 ---
 

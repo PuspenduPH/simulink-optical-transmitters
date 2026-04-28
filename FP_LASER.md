@@ -30,15 +30,20 @@ $$f_0^2 = \frac{I_0 - I_{th}}{\tau_{sp} \tau_{ph} I_{th}}$$
 $$\beta = \frac{I_0}{\tau_{sp} I_{th}}$$
 
 ### 1.3 Physical Parameters
-| Parameter | Symbol | Description | Unit |
-| :--- | :--- | :--- | :--- |
-| **Emission wavelength** | $\lambda$ | Operating wavelength of the laser | nm |
-| **Recombination times** | $\tau_{nr}$, $\tau_r$ | Non-radiative and radiative lifetimes | ns |
-| **Cavity dimension** | $L$ | Longitudinal length of the cavity | m |
-| **Loss coefficient** | $\gamma$ | Internal optical losses | 1/m |
-| **Mirror reflectancy** | $R_1$ | Reflectivity of the cavity facets | Dimensionless |
-| **Lifetimes** | $\tau_{sp}$, $\tau_{ph}$ | Carrier and photon lifetimes | ns |
-| **Operating Currents** | $I_d$, $I_{th}$, $I_0$ | Injection, threshold, and pre-biasing currents | mA |
+### 1.3 Physical Parameters
+| Parameter | Symbol | Description | Unit | Value |
+| :--- | :--- | :--- | :--- | :--- |
+| **Emission wavelength** | $\lambda$ | Operating wavelength of the laser | nm | $1550$ |
+| **Non-radiative lifetime** | $\tau_{nr}$ | Carrier non-radiative lifetime | ns | $5$ |
+| **Radiative lifetime** | $\tau_r$ | Carrier radiative lifetime | ns | $0.5$ |
+| **Cavity dimension** | $L$ | Longitudinal length of the cavity | m | $3 \times 10^{-4}$ |
+| **Loss coefficient** | $\gamma$ | Internal optical losses | 1/m | $35 \times 10^{-4}$ |
+| **Mirror reflectancy** | $R_1$ | Reflectivity of the cavity facets | - | $0.32$ |
+| **Carrier lifetime** | $\tau_{sp}$ | Spontaneous emission carrier lifetime | ns | $0.02$ |
+| **Photon lifetime** | $\tau_{ph}$ | Cavity photon lifetime | ns | $0.001$ |
+| **Injection current** | $I_d$ | Driving injection current | mA | $2$ |
+| **Threshold current** | $I_{th}$ | Lasing threshold current | mA | $0.5$ |
+| **Pre-bias current** | $I_0$ | Constant pre-bias current | mA | $1$ |
 
 ---
 

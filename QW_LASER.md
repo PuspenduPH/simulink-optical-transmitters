@@ -19,18 +19,21 @@ $$P_f(t) = S(t) \left[ \frac{V_{act} \eta hc}{\Gamma \tau_p \lambda_0} \right]$$
 ### 1.1 Physical Parameters
 The model utilizes the following geometric and physical parameters:
 
-| Parameter | Symbol | Description | Initial Unit |
-| :--- | :--- | :--- | :--- |
-| **Lasing wavelength** | $\lambda_0$ | Operating wavelength | cm |
-| **Active region volume** | $V_{act}$ | Volume of the laser cavity | cm$^3$ |
-| **Optical confinement** | $\Gamma$ | Fraction of optical mode in active layer | Dimensionless |
-| **Spontaneous emission** | $\beta$ | Coupling factor | Dimensionless |
-| **Photon lifetime** | $\tau_p$ | Cavity photon decay time | ps |
-| **Gain coefficient** | $g_0$ | Differential gain | cm$^3$/s |
-| **Transparency density**| $N_0$ | Carrier density at transparency | 1/cm$^3$ |
-| **Carrier lifetime** | $\tau_n$ | Electron-hole recombination time | ps |
-| **Quantum efficiency** | $\eta$ | Differential quantum efficiency per facet| Dimensionless |
-| **Equilibrium carriers** | $N_e$ | Equilibrium carrier density | 1/cm$^3$ |
+### 1.1 Physical Parameters
+The model utilizes the following geometric and physical parameters:
+
+| Parameter | Symbol | Description | Initial Unit | Value |
+| :--- | :--- | :--- | :--- | :--- |
+| **Lasing wavelength** | $\lambda_0$ | Operating wavelength | cm | $1.55 \times 10^{-4}$ |
+| **Active region volume** | $V_{act}$ | Volume of the laser cavity | cm$^3$ | $1.5 \times 10^{-10}$ |
+| **Optical confinement** | $\Gamma$ | Fraction of optical mode in active layer | - | $0.3$ |
+| **Spontaneous emission** | $\beta$ | Coupling factor | - | $1.0 \times 10^{-4}$ |
+| **Photon lifetime** | $\tau_p$ | Cavity photon decay time | ps | $2.0$ |
+| **Gain coefficient** | $g_0$ | Differential gain | cm$^3$/s | $2.5 \times 10^{-6}$ |
+| **Transparency density**| $N_0$ | Carrier density at transparency | 1/cm$^3$ | $1.0 \times 10^{18}$ |
+| **Carrier lifetime** | $\tau_n$ | Electron-hole recombination time | ps | $1000$ |
+| **Quantum efficiency** | $\eta$ | Differential quantum efficiency per facet| - | $0.4$ |
+| **Equilibrium carriers** | $N_e$ | Equilibrium carrier density | 1/cm$^3$ | $0$ |
 
 ---
 
@@ -95,15 +98,15 @@ Unlike the small-signal models, this subsystem employs closed-loop time-domain n
 * Mathematical operators (`Product`, `Sum`) explicitly recreate the polynomial $(N - N_0)(1 - \epsilon S)S$ gain-saturation mechanism at each time step.
 * The output $P_f$ is extracted via a simple linear gain (`G_Pf`) applied to the photon density $S(t)$.
 
-### 2.3 Model Snapshots
+### 2.3 Model Snapshots: Test Harness Variants
 
-| Top-Level Model | Rate Equations Subsystem |
+| Unipolar Hot-Start (Pulse Generator) | Bipolar Cold-Start (Signal Generator) |
 |:---:|:---:|
-| ![QW Laser main model](QW%20Laser/ARTIFACTS/Model%20Snapshots/main%20model.png) | ![QW Laser rate eq subsystem](QW%20Laser/ARTIFACTS/Model%20Snapshots/sub_rate_eq.png) |
+| ![QW Laser main model](QW%20Laser/ARTIFACTS/Model%20Snapshots/main_model_pg.png) | ![QW Laser signal generator model](QW%20Laser/ARTIFACTS/Model%20Snapshots/main_model_sg.png) |
 
-**Top-level model:** The main canvas shows the **Test Harness** at the left — the Multiport Switch and its masked selector block route either the unbiased (Case 1) or pre-biased (Case 2) current source into the QW LASER subsystem. The four Scope outputs ($N$, $S$, $I$, $P_f$) are visible on the right, each displayed on its own auto-scaled panel.
-
-**Rate equations subsystem:** The internal canvas is substantially more complex than the LED or FP Laser subsystems. It contains two closed integrator loops (one for $N(t)$, one for $S(t)$) with feedback paths implementing the gain-saturation product $(N - N_0)(1-\epsilon S)S$, reflecting the fundamentally nonlinear, large-signal nature of these rate equations.
+**Top-level model:** The main canvas features a **Test Harness** utilizing a Multiport Switch. This allows seamless toggling between an unbiased (Case 1) or pre-biased (Case 2) current source. 
+* **The Unipolar Variant (Left):** Uses a standard `Pulse Generator` which starts "High", immediately driving the laser at its maximum state from $t=0$.
+* **The Bipolar Variant (Right):** Replaces the pulse generator with a `Signal Generator` outputting a $\pm 0.5$ mA square wave summed with a 10 mA DC bias. This starts the simulation "Low" at 9.5 mA, allowing observation of the laser's physical cold-start transient before high-speed modulation begins.
 
 ---
 
@@ -112,50 +115,39 @@ Unlike the small-signal models, this subsystem employs closed-loop time-domain n
 Due to the highly stiff nature of these coupled differential equations, Simulink's solver must be rigidly defined. The solver is set to **Fixed-step (ode4 Runge-Kutta)** with a step size of `1e-13` (100 femtoseconds) to ensure numerical stability during rapid photon bursts.
 
 ### 3.1 Elimination of Cosmetic Gains and Muxing
-In the original literature, the authors utilized Multiplexer (Mux) blocks and arbitrary scaling gains to artificially squash all variables onto a single Scope graph. This approach obscures the true physical values and is highly prone to calculation errors.
-
-**Our Methodology:** We completely discarded the arbitrary gain blocks and Muxes. Instead, we routed the raw, unscaled signals directly into a **4-panel Scope layout**. This allows Simulink to dynamically auto-scale the Y-axis for each individual trace. Consequently, the simulation acts as a pure physics engine, outputting exact, unadulterated SI values ($20 \times 10^{23}$ m$^{-3}$ for density, $50 \mu$W for power) that can be directly verified against theoretical expectations.
+In the original literature, Multiplexer (Mux) blocks and arbitrary scaling gains were used to artificially squash all variables onto a single Scope graph. We discarded the arbitrary gain blocks and Muxes. Instead, we routed the raw, unscaled signals directly into a **4-panel Scope layout**. This allows Simulink to dynamically auto-scale the Y-axis for each individual trace, acting as a pure physics engine and outputting exact, unadulterated SI values ($20 \times 10^{23}$ m$^{-3}$ for density, $50 \mu$W for power).
 
 ---
 
 ## 4. Multi-Test Harness and Physical Analysis
 
-To seamlessly evaluate the laser's dynamics under different operating regimes without modifying the block diagram, a **Test Harness** was constructed using a `Multiport Switch`. A masked subsystem selector feeds an integer logic signal (1 or 2) into the control port of the switch, dynamically toggling between two isolated input circuits.
-
 ### 4.1 Test Case 1: Unbiased Pulse (0 mA to 10 mA)
 To observe turn-on delay limits, the active circuit supplies a raw 10 mA pulse.
+* **The Physics:** Grounded at 0 mA, the active region is depleted of electrons ($N \approx 0$). When the 10 mA pulse is injected, it takes time for electrons to fill the conduction band and reach the transparency threshold ($N_0$). 
+* **The Result:** A significant **turn-on delay** ($\sim 0.4$ ns) occurs. Once $N(t)$ crosses the threshold, population inversion triggers a massive burst of stimulated emission, causing severe relaxation oscillations (ringing).
 
-* **The Physics:** When the laser is grounded at 0 mA, the active region is depleted of electrons ($N \approx 0$). When the 10 mA pulse is injected, the laser cannot emit light immediately. It takes time for the injected electrons to fill the conduction band and reach the critical transparency threshold ($N_0$). 
-* **The Result:** The scope reveals a significant **turn-on delay** of approximately 0.4 ns. The carrier density $N(t)$ rises smoothly. Only after $N(t)$ crosses the threshold does population inversion occur, triggering a sudden, massive burst of stimulated emission. This rapid depletion and refilling of carriers causes severe relaxation oscillations (ringing).
+### 4.2 Test Case 2: Pre-Biased Modulation (Gain Clamping)
+To simulate actual telecommunication conditions, the laser is pre-biased above threshold. We explored this using two distinct initialization profiles:
 
-### 4.2 Test Case 2: Pre-Biased High-Speed Modulation (9.5 mA to 10.5 mA)
-To simulate actual telecommunication operating conditions, the active circuit supplies a 9.5 mA DC bias summed with a 1.0 mA modulation pulse.
+#### Variant A: The Ideal Hot-Start (Pulse Generator)
+The source defaults to maximum current (10.5 mA) immediately at $t=0$, assuming the laser has been running infinitely long prior to the simulation. The carrier density is instantly clamped, and no initial transient is observed.
 
-* **The Physics (Gain Clamping):** At 9.5 mA, the laser is biased well above its lasing threshold. At this state, the carrier density $N(t)$ becomes "clamped." Because the cavity is already undergoing continuous stimulated emission, any additional electrons injected into the system do not increase the overall carrier population; instead, they immediately recombine with holes to produce photons. 
-* **The Result:** The simulation perfectly validates this phenomenon. The carrier density $N(t)$ trace becomes a nearly flat, solid line clamped at its saturation limit. When the 1.0 mA modulation pulse hits, there is **zero turn-on delay**. The optical power $P_f$ reacts instantaneously, proving that pre-biasing is strictly required for high-bandwidth optical links.
+#### Variant B: The Realistic Cold-Start Transient (Signal Generator)
+The bipolar signal generator begins its first cycle at its minimum value ($10 \text{ mA} - 0.5 \text{ mA} = 9.5 \text{ mA}$). This perfectly simulates turning on the DC power supply, waiting for the laser to warm up, and *then* transmitting data.
 
 ---
 
-## 5. Simulation Results
+## 5. Simulation Results and Comparative Analysis
 
-| Case 1: Unbiased — Turn-On Delay + Ringing | Case 2: Pre-biased — Gain Clamping |
-|:---:|:---:|
-| ![QW Laser test case 1](QW%20Laser/ARTIFACTS/Plots/test_case1.png) | ![QW Laser test case 2](QW%20Laser/ARTIFACTS/Plots/test_case2.png) |
+| Case 1: Unbiased — Delay + Ringing | Case 2A: Pre-biased — Ideal Hot-Start | Case 2B: Pre-biased — Realistic Cold-Start |
+|:---:|:---:|:---:|
+| ![Unbiased Case](QW%20Laser/ARTIFACTS/Plots/test_case1.png) | ![QW Laser test case 2](QW%20Laser/ARTIFACTS/Plots/test_case2_pg.png) | ![QW Laser signal generator scope](QW%20Laser/ARTIFACTS/Plots/test_case2_sg.png) |
 
-### Reading the Scope — What the Physics Tells Us
+### Reading the Scope — The Cold-Start Transient Timeline (Case 2B)
 
-#### Case 1 — Unbiased Pulse
+The introduction of the bipolar signal generator reveals a highly accurate physical timeline of a laser powering on from an empty state before it begins transmitting data:
 
-**Turn-on delay (~0.4 ns).** After the current steps to 10 mA, the optical power $P_f$ remains at zero for approximately 0.4 ns. During this silent period, the injected carriers are filling the conduction band — $N(t)$ rises steadily but has not yet crossed the transparency threshold $N_0$ required for population inversion. No net stimulated emission occurs yet, so no light is produced.
-
-**Sudden burst + relaxation oscillations.** Once $N(t) > N_0$, optical gain exceeds the cavity loss and a massive avalanche of stimulated emission begins. The photon density $S(t)$ spikes sharply, rapidly depleting the carrier reservoir. This carrier depletion then kills the gain, $S(t)$ collapses, carriers refill, gain recovers, and another burst occurs — producing the damped ringing visible in $P_f$. The oscillations decay exponentially as the system finds a new steady state dictated by the balance of injection and stimulated emission.
-
-**A communication disaster.** The 0.4 ns delay plus the ringing tail mean that this drive scheme is completely unusable for reliable high-speed data transmission. A receiver cannot distinguish the delayed, distorted pulse from noise or from an adjacent symbol.
-
-#### Case 2 — Pre-biased Pulse
-
-**Flat carrier density (gain clamping).** The 9.5 mA bias keeps the laser deep in the lasing regime continuously. The $N(t)$ trace is nearly horizontal — any electron injected above the threshold immediately stimulates a photon and leaves the conduction band. The carrier population is "clamped" by the cavity gain-loss balance and cannot accumulate further.
-
-**Instantaneous optical response.** When the 1.0 mA modulation pulse is superimposed, the additional injection converts directly and immediately into additional photons. The $P_f$ trace steps cleanly with essentially zero delay and zero ringing — the transfer from current to light is nearly linear and instantaneous at this operating point.
-
-**Why this matters.** This comparison is the central design lesson of the experiment: pre-biasing eliminates the nonlinear turn-on delay because the device never leaves the lasing regime. In a real fiber-optic system, this means the LASER can faithfully follow a high-speed NRZ data stream, with each '1' bit producing a clean, immediate optical pulse.
+* **0 to 10 ns (The Pumping Phase):** The simulation begins with 9.5 mA injected into an empty cavity. The optical power ($P_f$) and photon density ($S$) remain perfectly flat at zero. During this time, the electrons are slowly filling the conduction band, visible as a smooth exponential rise in the carrier density trace ($N(t)$).
+* **10 to 15 ns (Turn-On Delay & Ringing):** Right around 12 ns, the carrier density successfully crosses the transparency threshold ($N_0$). The laser achieves population inversion and violently turns on. This generates the initial massive photon spike and subsequent relaxation oscillations. 
+* **15 to 20 ns (Steady-State Biasing):** The ringing dampens completely. The optical power flattens into a steady, horizontal baseline. This flat line is the physical manifestation of the 9.5 mA DC Bias. The laser is now idling, fully saturated with carriers, and awaiting data.
+* **20 ns Onward (High-Speed Modulation):** At exactly $t=20$ ns, the Signal Generator flips to its positive cycle, stepping the total current from 9.5 mA to 10.5 mA. Because the laser spent the first 20 ns warming up and clamping its carrier density at the threshold, this new 10.5 mA data pulse experiences **zero turn-on delay**. It instantly converts into optical power with a heavily damped, tight ringing profile, proving the necessity of pre-biasing in high-bandwidth links.
