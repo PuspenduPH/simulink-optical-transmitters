@@ -66,7 +66,7 @@ The models directly implement the governing equations (transfer functions and ra
 
 $$P_e(f) = H_T(f) \cdot I_d(f) = H_T(0) \cdot H_T^*(s) \cdot I_d(s)$$
 
-$$H_T(0) = \frac{hc}{\lambda q}\, \eta_{int}\, \eta_{inj}\, \eta_{ext}, \qquad H_T^*(s) = \frac{1}{\tau_r s + 1}$$
+$$H_T(0) = \frac{hc}{\lambda q} \eta_{int} \eta_{inj} \eta_{ext}, \qquad H_T^*(s) = \frac{1}{\tau_r s + 1}$$
 
 The LED response is governed by the carrier recombination lifetime $\tau_r$ and models the smooth exponential rise and decay of optical power under a unipolar 25 MHz drive pulse (0 – 50 mA). The solver max step size is constrained to 0.1 ns to faithfully render the transient.
 
@@ -83,9 +83,9 @@ The LED response is governed by the carrier recombination lifetime $\tau_r$ and 
 
 **Transfer Function:**
 
-$$H_T(0) = \frac{hc}{\lambda q}\,\eta_{int}\,\eta_{ext}\left[\frac{I_d - I_{th}}{I_d}\right]$$
+$$H_T(0) = \frac{hc}{\lambda q}\eta_{int}\eta_{ext}\left[\frac{I_d - I_{th}}{I_d}\right]$$
 
-$$H_T^*(s) = \frac{f_0^2}{s^2 + \beta s + f_0^2}, \quad f_0^2 = \frac{I_0 - I_{th}}{\tau_{sp}\,\tau_{ph}\,I_{th}}, \quad \beta = \frac{I_0}{\tau_{sp}\,I_{th}}$$
+$$H_T^*(s) = \frac{f_0^2}{s^2 + \beta s + f_0^2}, \quad f_0^2 = \frac{I_0 - I_{th}}{\tau_{sp}\tau_{ph}I_{th}}, \quad \beta = \frac{I_0}{\tau_{sp}I_{th}}$$
 
 The 2nd-order resonant pole captures the **relaxation oscillations** (ringing) produced when the laser is pulse-modulated at 500 MHz above threshold. A pre-biased drive current (1 mA bias + 2 mA pulse) keeps the device in the stimulated-emission regime at all times, ensuring zero turn-on delay. Solver step size is fixed at 1 ps to resolve the sub-nanosecond transients.
 
@@ -315,7 +315,7 @@ $$\eta_{int} = \frac{\tau_{nr}}{\tau_{nr} + \tau_r} \quad \text{(Internal quantu
 
 $$\eta_{ext} = \frac{\ln(1/R_1)}{\gamma L + \ln(1/R_1)} \quad \text{(External quantum efficiency — LASER)}$$
 
-$$\eta_{ext} = \left[1 - \left(\frac{n_s - n_a}{n_s + n_a}\right)^2\right]\left[1 - \cos\!\left(\frac{n_a}{n_s}\right)\right] \quad \text{(External quantum efficiency — LED)}$$
+$$\eta_{ext} = \left[1 - \left(\frac{n_s - n_a}{n_s + n_a}\right)^2\right]\left[1 - \cos\left(\frac{n_a}{n_s}\right)\right] \quad \text{(External quantum efficiency — LED)}$$
 
 ---
 
