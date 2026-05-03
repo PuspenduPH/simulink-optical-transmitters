@@ -217,14 +217,14 @@ All subsystems follow a **consistent architecture** documented in `Simulink_Subs
 │                  Masked Subsystem                   │
 │                                                     │
 │  ┌─────────────┐  Runs ONCE at compile time:        │
-│  │  Mask Dialog │──► classdef MaskInitialization()  │
-│  │  (user input)│    - ws.get()  all parameters     │
+│  │ Mask Dialog │──► classdef MaskInitialization()   │
+│  │ (user input)│    - ws.get()  all parameters      │
 │  └─────────────┘    - Unit conversion to SI         │
 │                      - Compute HT_0, f0_sq, β, …    │
 │                      - ws.set()  back to workspace  │
 │                                                     │
 │  Internal block diagram (runs EVERY time step):     │
-│  [Inport] → [Gain: HT_0] → [Transfer Fcn / ODE]    │
+│  [Inport] → [Gain: HT_0] → [Transfer Fcn / ODE]     │
 │                                        → [Outport]  │
 └─────────────────────────────────────────────────────┘
 ```
