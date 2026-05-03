@@ -163,7 +163,9 @@ Simulink Optical Simulations Project/
 ├── LED.md                             # LED — theory, model, and solver guide
 ├── QW_LASER.md                        # QW Laser — standard documentation
 ├── Simulink_Subsystem_User_Guide.md   # End-to-end guide for building masked subsystems
-└── Simulink toolbox for simulation and analysis of optical fiber links.pdf  # Base reference paper
+├── Simulink toolbox for simulation and analysis of optical fiber links.pdf  # Base reference paper
+└── tech_report.pdf  # This contains a detailed tech report for this project.
+
 ```
 
 ---
